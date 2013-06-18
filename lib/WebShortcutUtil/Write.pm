@@ -204,6 +204,9 @@ That being said, write_desktop_shortcut_file and write_url_shortcut_file
 will write unicode URLs.  The webloc writers should as well,
 although this functionality requires more testing.
 
+Note: The Mac::PropertyList module (http://search.cpan.org/~bdfoy/Mac-PropertyList/)
+must be installed in order to read ".webloc" files.
+
 =cut
 
 # SEE REFERENCES IN WebShortcutUtil.pm

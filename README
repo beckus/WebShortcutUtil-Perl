@@ -18,7 +18,7 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-  XML-Parser - Only required when reading an Apple ".webloc" shortcut.
+  Mac::PropertyList - Only required when reading/writing an Apple ".webloc" shortcut.
 
 The "t/samples" folder contains samples from the following repository:
   http://github.com/beckus/WebShortcutSamples

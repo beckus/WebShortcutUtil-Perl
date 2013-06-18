@@ -51,7 +51,12 @@ A brief list of the supported shortcut types:
 =item * .webloc - Used by Mac
 
 =back
-  
+
+In order to read/write ".webloc" files, the Mac::PropertyList module (http://search.cpan.org/~bdfoy/Mac-PropertyList/)
+must be installed.  Mac::PropertyList is listed as a dependency, but the the WebShortcutUtil
+module will still test out and install properly if it is not present.  The webloc subroutines will die
+if the Mac::PropertyList module is not installed.
+
 Note that this module is still beta-quality, and the interface is subject to change.
 
 =head1 SOURCE

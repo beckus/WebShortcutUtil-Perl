@@ -207,6 +207,9 @@ regardless of the file extension.  These should be used sparingly.
 You should use read_shortcut_file unless you have a good
 reason not to.
 
+Note: The Mac::PropertyList module (http://search.cpan.org/~bdfoy/Mac-PropertyList/)
+must be installed in order to read ".webloc" files.
+
 =cut
 
 # SEE REFERENCES IN WebShortcutUtil.pm

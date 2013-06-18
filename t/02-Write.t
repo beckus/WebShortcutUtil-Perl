@@ -5,10 +5,6 @@ use File::Spec qw(catdir catfile);
 use Module::Load::Conditional qw[check_install];
 use Test::More tests => 34;
 
-# Try to load the UTF8 package.  If it is not installed, that is OK.
-# The only side effect will be "Wide character in print..." warnings.
-eval { use Test::More::UTF8; };
-
 BEGIN { use_ok('WebShortcutUtil::Write') };
 require_ok('WebShortcutUtil::Write');
 
@@ -61,6 +57,13 @@ sub _make_path_with_error_check {
 
 
 use utf8;
+
+# Avoid "Wide character in print..." warnings (per http://perldoc.perl.org/Test/More.html)
+my $builder = Test::More->builder;
+binmode $builder->output, ":utf8";
+binmode $builder->failure_output, ":utf8";
+binmode $builder->todo_output, ":utf8";
+
 
 my $test_output_dir = File::Spec->catdir ( "blib", "t", "output" );
 if(-e $test_output_dir) {

@@ -27,6 +27,9 @@ I chose not to use a Git submodule for this - Github does not
 include the submodule when creating the downloadable tar/zip file.
 If the WebShortcutSamples repository is updated, the changes
 need to be manually applied in the local folder.
+Sample files that contain unicode (as well as special characters)
+have been omitted from the MANIFEST file.  This prevents warnings
+when building on a system with limited support for unicode.
 
 COPYRIGHT AND LICENCE
 

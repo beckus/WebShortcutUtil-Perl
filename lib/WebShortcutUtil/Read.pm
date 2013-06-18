@@ -40,10 +40,10 @@ WebShortcutUtil::Read - Utilities for reading web shortcut files
 
 =head1 SYNOPSIS
 
-  use WebShortcutUtil::Read qw/
-      shortcut_has_valid_extension
-      read_shortcut_file
-      read_shortcut_file_url/;
+  use WebShortcutUtil::Read qw(
+        shortcut_has_valid_extension
+        read_shortcut_file
+        read_shortcut_file_url);
 
   # If the file does not have a valid shortcut extension, the reads will fail.
   if(!shortcut_has_valid_extension($filename)) {
@@ -52,8 +52,8 @@ WebShortcutUtil::Read - Utilities for reading web shortcut files
 
   # Read name and URL
   my $results = read_shortcut_file($filename);
-  my $name = $reults{"name"};
-  my $url = $reults{"url"};
+  my $name = $results->{"name"};
+  my $url = $results->{"url"};
 
   # Just get URL
   my $url = read_shortcut_file_url($filename);
@@ -66,7 +66,7 @@ The following subroutines are provided:
 
 =cut
 
-my constant %_shortcut_readers = (
+my %_shortcut_readers = (
 	".desktop", \&read_desktop_shortcut_file,
 	".url", \&read_url_shortcut_file,
 	".webloc", \&read_webloc_shortcut_file,
@@ -102,12 +102,10 @@ sub shortcut_has_valid_extension {
 
 =item read_shortcut_file( FILENAME )
 
-=item read_shortcut_file_url( FILENAME )
-
 Reads the specified file and extracts the contents.  The type of
 shortcut file is determined by the file extension.  A hash will be returned
 containing two keys: "name" and "url".  The name is the name/title of
-the shortcut.  A hash will always be returned; if there is an error
+the shortcut.  A hash will always be returned - if there is an error
 reading the file, the routine will die with an appropriate error message.
 
 For ".desktop" and ".url" files, the reader can handle unicode characters
@@ -116,11 +114,14 @@ although this functionality still requires more testing.
 
 The name returned by the readers is a guess.  Many shortcut files
 do not contain a name/title embedded in the file.  ".desktop" shortcuts
-may contain several embedded names in different encodings.  Unfortunately,
+may contain several embedded names with different encodings.  Unfortunately,
 these names are not necessarily updated when the shortcut is renamed.
 It is difficult, if not impossible, to determine which is the correct name.
 As of right now, the reader will always return the name of the file as the
 name of the shortcut, although this may change in the future.
+
+Note: The Mac::PropertyList module (http://search.cpan.org/~bdfoy/Mac-PropertyList/)
+must be installed in order to read ".webloc" files.
 
 =cut
 
@@ -135,6 +136,13 @@ sub read_shortcut_file {
     my $reader_sub = $_shortcut_readers{lc ($suffix)};
     &$reader_sub($filename);
 }
+
+
+=item read_shortcut_file_url( FILENAME )
+
+The same as read_shortcut_file, but only returns a string containing the URL.
+
+=cut
 
 sub read_shortcut_file_url {
     return read_shortcut_file(@_)->{"url"};
@@ -176,7 +184,7 @@ sub _url_is_blank_or_comment_line {
     $elimination_line =~ s/(;.*)//;
     $elimination_line =~ s/\s*//;
 
-    # Accoutn ofr other separators as well.
+    # Account for other separators as well.
     return $elimination_line eq "";
 }
 
@@ -206,9 +214,6 @@ However, they force the file to be parsed as a particular type,
 regardless of the file extension.  These should be used sparingly.
 You should use read_shortcut_file unless you have a good
 reason not to.
-
-Note: The Mac::PropertyList module (http://search.cpan.org/~bdfoy/Mac-PropertyList/)
-must be installed in order to read ".webloc" files.
 
 =cut
 

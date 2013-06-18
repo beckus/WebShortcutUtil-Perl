@@ -37,14 +37,14 @@ WebShortcutUtil::Write - Utilities for writing web shortcut files
 
 =head1 SYNOPSIS
 
-  use WebShortcutUtil::Write qw/
-      create_desktop_shortcut_filename
-      create_url_shortcut_filename
-      create_webloc_shortcut_filename
-      write_desktop_shortcut_file
-      write_url_shortcut_file
-      write_webloc_binary_shortcut_file
-      write_webloc_xml_shortcut_file/;
+  use WebShortcutUtil::Write qw(
+        create_desktop_shortcut_filename
+        create_url_shortcut_filename
+        create_webloc_shortcut_filename
+        write_desktop_shortcut_file
+        write_url_shortcut_file
+        write_webloc_binary_shortcut_file
+        write_webloc_xml_shortcut_file);
 
   # Helpers to create a file name (with bad characters removed).
   my $filename = create_desktop_shortcut_filename("Shortcut: Name");
@@ -52,10 +52,10 @@ WebShortcutUtil::Write - Utilities for writing web shortcut files
   my $filename = create_webloc_shortcut_filename("Shortcut: Name");
 
   # Write shortcuts
-  write_desktop_shortcut_file("myshortcut.desktop");
-  write_url_shortcut_file("myshortcut.url");
-  write_webloc_binary_shortcut_file("myshortcut_binary.webloc");
-  write_webloc_xml_shortcut_file("myshortcut_xml.webloc");
+  write_desktop_shortcut_file("myshortcut.desktop", "myname", "http://myurl.com/");
+  write_url_shortcut_file("myshortcut.url", "myname", "http://myurl.com/");
+  write_webloc_binary_shortcut_file("myshortcut_binary.webloc", "myname", "http://myurl.com/");
+  write_webloc_xml_shortcut_file("myshortcut_xml.webloc", "myname", "http://myurl.com/");
 
 =head1 DESCRIPTION
 
@@ -66,10 +66,10 @@ The following subroutines are provided:
 =cut
 
 
-my constant $desktop_extension = ".desktop";
-my constant $url_extension = ".url";
-my constant $webloc_extension = ".webloc";
-my constant $website_extension = ".website";
+my $desktop_extension = ".desktop";
+my $url_extension = ".url";
+my $webloc_extension = ".webloc";
+my $website_extension = ".website";
 
 
 ### Subroutines for generating file names
@@ -88,11 +88,11 @@ of filesystems without issues.  The following rules are used:
 
 =item 1 An appropriate extension is added based on the shortcut type (e.g. ".url").
 
-=item 2 Remove characters which may be prohibited in some file systems (such as "?" and ":").
-        Note there may still be characters left that will cause difficulty
+=item 2 Removes characters which are prohibited in some file systems (such as "?" and ":").
+        Note there may still be characters left that will cause difficulty,
         such as spaces and single quotes.
 
-=item 3 If the resulting file name is an empty string, it will be named "_".
+=item 3 If the resulting name (after removing characters) is an empty string, the file will be named "_".
 
 =item 4 Unicode characters are B<not changed>.  If there are unicode characters,
         they could cause problems on some file systems.  If you do not
@@ -106,7 +106,7 @@ of filesystems without issues.  The following rules are used:
 
 =back
 
-The following are some references regarding file name restrictions:
+The following references discuss file name restrictions:
 
 =over 8
 
@@ -118,9 +118,11 @@ The following are some references regarding file name restrictions:
 
 =item * https://www.dropbox.com/help/145/en
 
+=back
+
 =cut
 
-my constant $default_max_filename_length = 100;
+my $default_max_filename_length = 100;
 
 sub _create_filename {
     my ($name, $length, $extension) = @_;
@@ -205,7 +207,7 @@ will write unicode URLs.  The webloc writers should as well,
 although this functionality requires more testing.
 
 Note: The Mac::PropertyList module (http://search.cpan.org/~bdfoy/Mac-PropertyList/)
-must be installed in order to read ".webloc" files.
+must be installed in order to write ".webloc" files.
 
 =cut
 

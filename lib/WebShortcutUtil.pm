@@ -95,7 +95,9 @@ Andre Beckus E<lt>beckus@cpan.orgE<gt>
 
 =item * Write module: http://search.cpan.org/~beckus/WebShortcutUtil/lib/WebShortcutUtil/Write.pm
 
-=item * Perl module for using Windows shortcuts: http://search.cpan.org/perldoc?Win32-InternetShortcut
+=item * Perl module for using Windows shortcuts: http://search.cpan.org/~ishigaki/Win32-InternetShortcut/
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 

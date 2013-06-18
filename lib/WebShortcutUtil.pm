@@ -1,84 +1,106 @@
 package WebShortcutUtil;
 
-use 5.014002;
 use strict;
 use warnings;
 
-require Exporter;
+our $VERSION = '0.10';
 
-our @ISA = qw(Exporter);
+# REFERENCES
+#
+# Free Desktop:
+#   http://standards.freedesktop.org/desktop-entry-spec/latest/ (used Version 1.1-draft)
+#
+# Windows URL (also applicable to Website):
+#   http://stackoverflow.com/questions/539962/creating-a-web-shortcut-on-user-desktop-programmatically
+#   http://stackoverflow.com/questions/234231/creating-application-shortcut-in-a-directory
+#   http://delphi.about.com/od/internetintranet/a/lnk-shortcut.htm
+#   http://read.pudn.com/downloads3/sourcecode/windows/system/11495/shell/shlwapi/inistr.cpp__.htm
+#   http://epiphany-browser.sourcearchive.com/documentation/2.24.0/plugin_8cpp-source.html
+#   http://epiphany-browser.sourcearchive.com/documentation/2.24.0/plugin_8cpp-source.html
+#
+# Webloc / Plist:
+#   http://search.cpan.org/~bdfoy/Mac-PropertyList-1.38/
+#     or https://github.com/briandfoy/mac-propertylist
+#   http://opensource.apple.com/source/CF/CF-550/CFBinaryPList.c
+#   http://code.google.com/p/cocotron/source/browse/Foundation/NSPropertyList/NSPropertyListReader_binary1.m
+#   http://www.apple.com/DTDs/PropertyList-1.0.dtd
 
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
-
-# This allows declaration	use WebShortcutUtil ':all';
-# If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
-# will save memory.
-our %EXPORT_TAGS = ( 'all' => [ qw(
-	
-) ] );
-
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
-
-our @EXPORT = qw(
-	
-);
-
-our $VERSION = '0.01';
-
-
-# Preloaded methods go here.
-
-1;
-__END__
-# Below is stub documentation for your module. You'd better edit it!
 
 =head1 NAME
 
-WebShortcutUtil - Perl extension for blah blah blah
-
-=head1 SYNOPSIS
-
-  use WebShortcutUtil;
-  blah blah blah
+WebShortcutUtil - Perl module for reading and writing web shortcut files
 
 =head1 DESCRIPTION
 
-Stub documentation for WebShortcutUtil, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
+This module is part of the WebShortcutUtil suite.  For more details
+see the main website at http://beckus.github.io/WebShortcutUtil/ .
 
-Blah blah blah.
+All of the subroutines are contained in the Read and Write submodules.
+See those submodules for usage information.
 
-=head2 EXPORT
+A brief list of the supported shortcut types:
 
-None by default.
+=over 4
 
+=item * .desktop - Free Desktop shortcut (used by Linux)
 
+=item * .url - Used by Windows
 
-=head1 SEE ALSO
+=item * .website - Used by Windows
 
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
+=item * .webloc - Used by Mac
 
-If you have a mailing list set up for your module, mention it here.
+=back
+  
+Note that this module is still beta-quality, and the interface is subject to change.
 
-If you have a web site set up for your module, mention it here.
+=head1 SOURCE
+
+https://github.com/beckus/WebShortcutUtil-Perl
+
+=head1 FUTURE IDEAS
+
+Some ideas for enhanced functionality:
+
+=over 4
+
+=item * For ".desktop" files, add logic to extract the names embedded in a shortcut
+        (including all localized versions of the name).  Similar logic could also
+        be written for ".website" files.
+
+=item * Explore unicode functionality for ".webloc" files.  Will a Mac open a URL
+        that has unicode characters?
+
+=item * Add an ASCII conversion option to the filename creation routines
+        (i.e. to remove unicode characters).
+
+=back
 
 =head1 AUTHOR
 
-Andre, E<lt>andre@E<gt>
+Andre Beckus E<lt>beckus@cpan.orgE<gt>
+
+=head1 SEE ALSO
+
+=over 4
+
+=item * Main project website: http://beckus.github.io/WebShortcutUtil/
+
+=item * Read module: http://search.cpan.org/~beckus/WebShortcutUtil/lib/WebShortcutUtil/Read.pm
+
+=item * Write module: http://search.cpan.org/~beckus/WebShortcutUtil/lib/WebShortcutUtil/Write.pm
+
+=item * Perl module for using Windows shortcuts: http://search.cpan.org/perldoc?Win32-InternetShortcut
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2013 by Andre
+Copyright (C) 2013 by Andre Beckus
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.14.2 or,
-at your option, any later version of Perl 5 you may have available.
-
+it under the same terms as the Perl 5 programming language itself.
 
 =cut
+
+
+1;
+__END__

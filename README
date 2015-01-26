@@ -13,7 +13,7 @@ To install this module type the following:
    make
    make test
    make install
-   
+
 OTHER COMMANDS
 
 To view documentation:

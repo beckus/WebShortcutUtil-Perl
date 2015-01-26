@@ -41,10 +41,10 @@ use WebShortcutUtil::Read qw(
 
 sub _test_read_shortcut {
     my ( $path, $filename, $expected_name, $expected_url ) = @_;
-    
+
     my $full_filename = File::Spec->catfile($path, $filename);
     my $result = read_shortcut_file($full_filename);
-    
+
     my $expected_result = {
         "name", $expected_name,
         "url", $expected_url};
@@ -86,13 +86,13 @@ ok(!shortcut_has_valid_extension("file.misleading.badextension"), "Invalid exten
 # get_handle_reader_for_file tests
 is(get_handle_reader_for_file("myfile.desktop"),
    \&read_desktop_shortcut_handle);
-   
+
 is(get_handle_reader_for_file("myfile.url"),
    \&read_url_shortcut_handle);
-   
+
 is(get_handle_reader_for_file("myfile.webloc"),
    \&read_webloc_shortcut_handle);
-   
+
 is(get_handle_reader_for_file("myfile.website"),
    \&read_website_shortcut_handle);
 

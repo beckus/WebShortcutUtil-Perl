@@ -33,18 +33,18 @@ use WebShortcutUtil::Write qw(
 
 sub _test_write_shortcut {
     my ( $write_sub, $create_filename_sub, $path, $name, $url, $exception_check ) = @_;
-    
+
     # Note that this routine will have problems if any characters are removed...
     my $created_filename = &{$create_filename_sub}($name);
     my $full_filename = File::Spec->catfile($path, $created_filename);
     ok(&{$write_sub}($full_filename, $name, $url), "Writing: $full_filename");
-    
+
     my @result = read_shortcut_file($full_filename);
     my @expected_result = {
         "name", $name,
         "url", $url};
     is_deeply(\@result, \@expected_result, "Verifying: $full_filename");
-        
+
     if($exception_check) {
         eval { &{$write_sub}($full_filename, $name, $url) };
         like ($@, qr/File .*/, "Already exists: $full_filename");

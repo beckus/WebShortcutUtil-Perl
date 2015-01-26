@@ -14,13 +14,39 @@ To install this module type the following:
    make test
    make install
 
-OTHER COMMANDS
 
-To view documentation:
-   make
-   man blib/man3/WebShortcutUtil.3
-   man blib/man3/WebShortcutUtil::Read.3
-   man blib/man3/WebShortcutUtil::Write.3
+
+DEPLOYMENT TO CPAN
+
+- Need to run these commands to set up environment (in Ubuntu):
+  sudo apt-get install libperl-critic-perl libdevel-cover-perl
+- Update version numbers in all pm files.
+- Run unit tests: make test
+- Get test coverage (this is not currently working?):
+    cover -test
+  Check coverage report:
+    xdg-open cover_db/coverage.html
+- Check man pages:
+    make
+    man blib/man3/WebShortcutUtil.3
+    man blib/man3/WebShortcutUtil::Read.3
+    man blib/man3/WebShortcutUtil::Write.3
+- Try running code in documentation SYNOPSIS to make sure it works.
+- Try installing (both in Linux and Windows):
+    sudo make install
+- Regenerate MANIFEST (if no files were added or removed this can be skipped):
+    make manifest
+  Scrub generated MANIFEST
+- Tag the new version in github
+- Go to github and download archive for the tag. (github only gives option
+  to download zip?)
+  Extract the archive.
+  Rename the root folder from "WebShortcutUtil-Perl-version" to
+  "WebShortcutUtil-version".
+  Compress the root folder to "WebShortcutUtil-version.targ.gz".
+- Login to the PAUSE website https://pause.perl.org/pause/.
+  Upload the "WebShortcutUtil-version.targ.gz".
+
 
 
 DEPENDENCIES

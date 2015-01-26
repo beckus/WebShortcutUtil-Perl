@@ -13,6 +13,15 @@ To install this module type the following:
    make
    make test
    make install
+   
+OTHER COMMANDS
+
+To view documentation:
+   make
+   man blib/man3/WebShortcutUtil.3
+   man blib/man3/WebShortcutUtil::Read.3
+   man blib/man3/WebShortcutUtil::Write.3
+
 
 DEPENDENCIES
 

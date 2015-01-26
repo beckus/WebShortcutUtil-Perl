@@ -6,7 +6,7 @@ use 5.006_001;
 use strict;
 use warnings;
 
-our $VERSION = '0.11';
+our $VERSION = '0.20';
 
 use feature 'switch';
 

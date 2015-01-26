@@ -19,14 +19,24 @@ can_ok('WebShortcutUtil::Read', qw(
     read_url_shortcut_file
     read_webloc_shortcut_file
     read_website_shortcut_file
+    read_desktop_shortcut_handle
+    read_url_shortcut_handle
+    read_webloc_shortcut_handle
+    read_website_shortcut_handle
 ));
 
 #########################
 
 use WebShortcutUtil::Read qw(
+    get_shortcut_name_from_filename
     shortcut_has_valid_extension
+    get_handle_reader_for_file
     read_shortcut_file
     read_shortcut_file_url
+    read_desktop_shortcut_handle
+    read_url_shortcut_handle
+    read_webloc_shortcut_handle
+    read_website_shortcut_handle
 );
 
 sub _test_read_shortcut {
@@ -57,6 +67,10 @@ binmode $builder->todo_output, ":utf8";
 
 diag("Some of the following tests may show warnings.");
 
+# get_shortcut_name_from_filename tests
+is(get_shortcut_name_from_filename("mypath/my.file.desktop"), "my.file");
+is(get_shortcut_name_from_filename("mypath\\my.file.desktop"), "my.file");
+
 # has_valid_extension tests
 ok(shortcut_has_valid_extension("file.desktop"), "Valid extention .desktop");
 ok(shortcut_has_valid_extension("file.DESKTOP"), "Valid extention .DESKTOP");
@@ -68,6 +82,19 @@ ok(shortcut_has_valid_extension("file.misleading.desktop"), "Valid extention mul
 ok(!shortcut_has_valid_extension("file.badextension"), "Invalid extention");
 ok(!shortcut_has_valid_extension("file"), "Invalid no extention");
 ok(!shortcut_has_valid_extension("file.misleading.badextension"), "Invalid extention multiple dots");
+
+# get_handle_reader_for_file tests
+is(get_handle_reader_for_file("myfile.desktop"),
+   \&read_desktop_shortcut_handle);
+   
+is(get_handle_reader_for_file("myfile.url"),
+   \&read_url_shortcut_handle);
+   
+is(get_handle_reader_for_file("myfile.webloc"),
+   \&read_webloc_shortcut_handle);
+   
+is(get_handle_reader_for_file("myfile.website"),
+   \&read_website_shortcut_handle);
 
 
 # Test missing file
@@ -249,7 +276,7 @@ SKIP: {
 
     # Missing file
     eval { read_shortcut_file("bad_file.webloc") };
-    like ($@, qr/parse_plist_file: file.*/, "Read bad webloc file");
+    like ($@, qr/Error opening file.*/, "Read bad webloc file");
 
     # Plist Error Test
     my $webloc_xml_fake_path = File::Spec->catdir("t", "samples", "fake", "webloc", "xml");

@@ -18,12 +18,18 @@ our @ISA = qw(Exporter);
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
     shortcut_has_valid_extension
+    get_shortcut_name_from_filename
     read_shortcut_file
     read_shortcut_file_url
 	read_desktop_shortcut_file
 	read_url_shortcut_file
 	read_webloc_shortcut_file
 	read_website_shortcut_file
+	get_handle_reader_for_file
+	read_desktop_shortcut_handle
+    read_url_shortcut_handle
+    read_webloc_shortcut_handle
+    read_website_shortcut_handle
 ) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
@@ -64,11 +70,18 @@ The following subroutines are provided:
 
 =cut
 
-my %_shortcut_readers = (
+my %_shortcut_file_readers = (
 	".desktop", \&read_desktop_shortcut_file,
 	".url", \&read_url_shortcut_file,
 	".webloc", \&read_webloc_shortcut_file,
 	".website", \&read_website_shortcut_file,
+);
+
+my %_shortcut_handle_readers = (
+    ".desktop", \&read_desktop_shortcut_handle,
+    ".url", \&read_url_shortcut_handle,
+    ".webloc", \&read_webloc_shortcut_handle,
+    ".website", \&read_website_shortcut_handle,
 );
 
 
@@ -78,7 +91,25 @@ my %_shortcut_readers = (
 sub _fileparse_any_extension {
     my ( $filename ) = @_;
 
-    return fileparse($filename,  qr/\.[^.]*/);
+    my @pieces = split(m/[\\\/]/, $filename);
+    my $filename_without_path = pop(@pieces);
+    my ($name, $path, $suffix) = fileparse($filename_without_path,  qr/\.[^.]*/);
+    return ($name, $suffix);
+}
+
+
+=item get_shortcut_name_from_filename( FILENAME )
+
+Gets the shortcut name from the file name.  This essentially
+gets the base name of the file name.  This is the same name
+that the shortcut readers will return.
+
+=cut
+
+sub get_shortcut_name_from_filename {
+	my ( $filename ) = @_;
+	my ($name, $suffix) = _fileparse_any_extension($filename);
+	return $name;
 }
 
 
@@ -92,9 +123,9 @@ its extension matches one of the supported types.
 sub shortcut_has_valid_extension {
 	my ( $filename ) = @_;
 	
-	my ($name, $path, $suffix) = _fileparse_any_extension($filename);
+	my ($name, $suffix) = _fileparse_any_extension($filename);
 	
-	return exists $_shortcut_readers{lc ($suffix)};
+	return exists $_shortcut_file_readers{lc ($suffix)};
 }
 
 
@@ -126,12 +157,12 @@ must be installed in order to read ".webloc" files.
 sub read_shortcut_file {
     my ( $filename ) = @_;
 
-    my ($name, $path, $suffix) = _fileparse_any_extension($filename);
+    my ($name, $suffix) = _fileparse_any_extension($filename);
     
-    if (!exists($_shortcut_readers{lc ($suffix)})) {
+    if (!exists($_shortcut_file_readers{lc ($suffix)})) {
     	croak ( "Shortcut file does not have a recognized extension!" );
     }
-    my $reader_sub = $_shortcut_readers{lc ($suffix)};
+    my $reader_sub = $_shortcut_file_readers{lc ($suffix)};
     &$reader_sub($filename);
 }
 
@@ -219,18 +250,92 @@ reason not to.
 
 sub read_desktop_shortcut_file {
     my ( $filename ) = @_;
+   
+    _ensure_file_exists($filename);
+    open (my $file, "<:encoding(UTF-8)", $filename) or croak ( "Error opening file ${filename}: $!" );
+    
+    my $url = read_desktop_shortcut_handle($file);
+    
+    close ($file);
+    
+    my $name = get_shortcut_name_from_filename($filename);
+
+    return {
+        "name", $name,
+        "url", $url};
+}
+
+
+
+sub read_url_shortcut_file {
+    my ( $filename ) = @_;
+    
+    _ensure_file_exists($filename);
+    open (my $file, "<", $filename) or croak ( "Error opening file ${filename}: $!" );
+    
+    my $url = read_url_shortcut_handle($file);
+
+    close ($file);
+    
+    my $name = get_shortcut_name_from_filename($filename);
+
+    return {
+        "name", $name,
+        "url", $url};
+}
+
+
+sub read_website_shortcut_file {
+    read_url_shortcut_file(@_);
+}
+
+
+
+sub read_webloc_shortcut_file
+{
+    my ( $filename ) = @_;
+    
+    open (my $file, "<", $filename) or croak ( "Error opening file ${filename}: $!" );
+    binmode($file);
+    
+    my $url = read_webloc_shortcut_handle( $file );
+    
+    close ($file);
+    
+    my $name = get_shortcut_name_from_filename($filename);
+
+    return {
+        "name", $name,
+        "url", $url};
+}
+
+
+
+
+
+=item read_desktop_shortcut_handle( HANDLE )
+
+=item read_url_shortcut_handle( HANDLE )
+
+=item read_website_shortcut_handle( HANDLE )
+
+=item read_webloc_shortcut_handle( HANDLE )
+
+Similar to the corresponding file readers, but read from an
+IO::Handle object instead.
+=cut
+
+sub read_desktop_shortcut_handle {
+    my ( $handle ) = @_;
     
     # Make sure that we are using line feed as the separator
     local $/ = "\n";
-    
-    _ensure_file_exists($filename);
-    open (my $file, "<:encoding(UTF-8)", $filename) or croak ( "Error opening file ${filename}: $!" );
     
     # Read to the "Desktop Entry"" group - this should be the first entry, but comments and blank lines are allowed before it.
     # Should handle desktop entries at different positions not just in first spot....
     my $desktop_entry_found = 0;
     while(1) {
-    	my $next_line = <$file>;
+    	my $next_line = <$handle>;
     	if(not $next_line) {
     		# End of file
     		last;
@@ -253,7 +358,7 @@ sub read_desktop_shortcut_file {
     my $type = undef;
     my $url = undef;
     while(1) {
-    	my $next_line = <$file>;
+    	my $next_line = <$handle>;
     	if(not $next_line) {
             last;
     	} elsif(_is_group_header($next_line, ".*")) {
@@ -274,8 +379,6 @@ sub read_desktop_shortcut_file {
     	}
     }
     
-    close ($file);
-    
     # Show a warning if the Type key is not right, but still continue.
     if(!defined($type)) {
     	warn "Warning: Type not found in desktop file";
@@ -286,12 +389,8 @@ sub read_desktop_shortcut_file {
     if(not defined($url)) {
         die "URL not found in file";
     }
-    
-    my $name = _fileparse_any_extension($filename);
 
-    return {
-    	"name", $name,
-    	"url", $url};
+    return $url;
 }
 
 
@@ -302,23 +401,20 @@ use constant {
     OTHER_SECTION => 3,
 };
 
-sub read_url_shortcut_file {
-    my ( $filename ) = @_;
-    
+sub read_url_shortcut_handle {
+    my ( $handle ) = @_;
+
     # Make sure that we are using line feed as the separator.
     # Windows uses \r\n as the terminator, but should be safest always to use \n since it
     # handles both end-of-line cases.
     local $/ = "\n";
-    
-    _ensure_file_exists($filename);
-    open (my $file, "<", $filename) or croak ( "Error opening file ${filename}: $!" );
-    
+        
     # Read to the desktop file entry group - this should be the first entry, but comments and blank lines are allowed before it.
     my $curr_section = NO_SECTION;
     my $parsed_url = undef;
     my $parsed_urlw = undef;
     while(1) {
-        my $next_line = <$file>;
+        my $next_line = <$handle>;
         if(not $next_line) {
             last;
             # use a constant instead of indicvidual bools.
@@ -346,10 +442,6 @@ sub read_url_shortcut_file {
         }
     }
 
-    close ($file);
-    
-    my $name = _fileparse_any_extension($filename);
-
     my $url;
     if(defined($parsed_urlw)) {
     	$url = $parsed_urlw;
@@ -359,15 +451,13 @@ sub read_url_shortcut_file {
     	die "URL not found in file";
     }
 
-  	return {
-        "name", $name,
-        "url", $url};
+  	return $url;
 
 }
 
 
-sub read_website_shortcut_file {
-    read_url_shortcut_file(@_);
+sub read_website_shortcut_handle {
+    read_url_shortcut_handle(@_);
 }
 
 # TODO: Fix this eval to not use an expression.  This causes it to fail perlcritic.
@@ -380,13 +470,13 @@ sub _try_load_module_for_webloc {
 
 
 
-sub read_webloc_shortcut_file
+sub read_webloc_shortcut_handle
 {
-    my ( $filename ) = @_;
-    
+    my ( $handle ) = @_;
+
     _try_load_module_for_webloc ( "Mac::PropertyList", "qw(:all)" );
-    
-    my $data  = parse_plist_file( $filename );
+
+    my $data = parse_plist_fh( $handle );
     
     if (ref($data) ne "Mac::PropertyList::dict") {
     	die "Webloc plist file does not contain a dictionary!";
@@ -396,13 +486,33 @@ sub read_webloc_shortcut_file
     
     my $url_object = $data->{ 'URL' };
     my $url = $url_object->value;
-    
-    my $name = _fileparse_any_extension($filename);
-    
-    return {
-    	"name", $name,
-        "url", $url};
+
+    return $url;
 }
+
+=item get_handle_reader_for_file( FILENAME )
+
+Gets the handle reader (either read_desktop_shortcut_handle, read_url_shortcut_handle,
+read_website_shortcut_handle, or read_webloc_shortcut_handle) to read the
+specified file.  This routine is useful if you need to read from an IO::Handle
+object, and have the original file name to determine the shortcut type.
+
+=cut
+
+sub get_handle_reader_for_file
+{
+    my ( $filename ) = @_;
+    
+    my ($name, $suffix) = _fileparse_any_extension($filename);
+    
+    if (!exists($_shortcut_handle_readers{lc ($suffix)})) {
+        croak ( "Shortcut file does not have a recognized extension!" );
+    }
+    my $reader_sub = $_shortcut_handle_readers{lc ($suffix)};
+    return $reader_sub;
+}
+
+
 
 1;
 __END__

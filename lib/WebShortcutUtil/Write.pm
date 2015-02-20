@@ -15,13 +15,13 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
-    create_desktop_shortcut_filename
-    create_url_shortcut_filename
-    create_webloc_shortcut_filename
-    write_desktop_shortcut_file
-    write_url_shortcut_file
-    write_webloc_binary_shortcut_file
-    write_webloc_xml_shortcut_file
+	create_desktop_shortcut_filename
+	create_url_shortcut_filename
+	create_webloc_shortcut_filename
+	write_desktop_shortcut_file
+	write_url_shortcut_file
+	write_webloc_binary_shortcut_file
+	write_webloc_xml_shortcut_file
     write_desktop_shortcut_handle
     write_url_shortcut_handle
     write_webloc_binary_shortcut_handle
@@ -31,7 +31,7 @@ our %EXPORT_TAGS = ( 'all' => [ qw(
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
-
+	
 );
 
 
@@ -130,7 +130,7 @@ my $default_max_filename_length = 100;
 
 sub _create_filename {
     my ($name, $length, $extension) = @_;
-
+    
     if(!defined($length)) {
         $length = $default_max_filename_length;
     } else {
@@ -139,15 +139,16 @@ sub _create_filename {
             croak("Length parameter must be greater than or equal to ${min_length}")
         }
     }
-
+    
     if(!defined($name)) {
         $name = "";
     }
-
+    
     my $max_basename_length = $length - length($extension);
 
     # The valid characters are listed below in ASCII order.
     # Essentially this means we are excluding: "%*/<>?\^| (along with any control characters)
+    # Note that Unicode characters are allowed in the file name.
     my $clean_name = $name;
     $clean_name =~ s/[^ !#\$&'\(\)+,\-\.,0-9;=\@A-Z\[\]_`a-z\{\}~\x{0080}-\x{FFFF}]//g;
 
@@ -156,26 +157,26 @@ sub _create_filename {
     }
 
     my $filename = substr($clean_name, 0, $max_basename_length) . $extension;
-
+    
     return $filename;
 }
 
 # $length Includes file name and extension (no path).
 sub create_desktop_shortcut_filename {
-    my ($name, $length) = @_;
-
-    _create_filename($name, $length, $desktop_extension);
+	my ($name, $length) = @_;
+	
+	_create_filename($name, $length, $desktop_extension);
 }
 
 sub create_url_shortcut_filename {
     my ($name, $length) = @_;
-
+    
     _create_filename($name, $length, $url_extension);
 }
 
 sub create_webloc_shortcut_filename {
     my ($name, $length) = @_;
-
+    
     _create_filename($name, $length, $webloc_extension);
 }
 
@@ -184,9 +185,9 @@ sub create_webloc_shortcut_filename {
 ### The writers
 
 sub _check_file_already_exists {
-    my ( $filename ) = @_;
-
-    if(-e $filename) {
+	my ( $filename ) = @_;
+	
+	if(-e $filename) {
         croak "File ${filename} already exists";
     }
 }
@@ -220,99 +221,94 @@ must be installed in order to write ".webloc" files.
 
 sub write_desktop_shortcut_file {
     my ( $filename, $name, $url ) = @_;
-
+ 
     _check_file_already_exists ( $filename );
     open (my $file, ">:encoding(UTF-8)", $filename) or die "Error opening file \"${filename}\": $!";
-
+    
     write_desktop_shortcut_handle($file, $name, $url);
-
+    
     close ($file);
-
+    
     return 1;
 }
 
 sub write_url_shortcut_file {
     my ( $filename, $name, $url ) = @_;
-
+ 
     _check_file_already_exists ( $filename );
     open (my $file, ">", $filename) or die "Error opening file \"${filename}\": $!";
-
+    
     write_url_shortcut_handle($file, $name, $url);
-
+    
     close ($file);
-
+    
     return 1;
 }
 
 sub write_webloc_binary_shortcut_file {
     my ( $filename, $name, $url ) = @_;
-
+ 
     _check_file_already_exists ( $filename );
-
+    
     open (my $file, ">:encoding(UTF-8)", $filename) or die "Error opening file \"${filename}\": $!";
     binmode $file;
     write_webloc_binary_shortcut_handle($file, $name, $url);
     close ($file);
-
+    
     return 1;
 }
 
 sub write_webloc_xml_shortcut_file {
     my ( $filename, $name, $url ) = @_;
-
+ 
     _check_file_already_exists ( $filename );
-
+    
     open (my $file, ">:encoding(UTF-8)", $filename) or die "Error opening file \"${filename}\": $!";
     write_webloc_xml_shortcut_handle($file, $name, $url);
     close ($file);
-
+    
     return 1;
 }
 
 
 
-=item write_desktop_shortcut_handle( HANDLE, NAME, URL )
-
-=item write_url_shortcut_handle( HANDLE, NAME, URL )
-
-=item write_webloc_binary_shortcut_handle( HANDLE, NAME, URL )
-
-=item write_webloc_xml_shortcut_handle( HANDLE, NAME, URL )
-
-Similar to the corresponding file writers, but writes to an
-IO::Handle object instead.
-
-=cut
-
 sub write_desktop_shortcut_handle {
     my ( $handle, $name, $url ) = @_;
-
+ 
     # Assume all the writes will be done in UTF-8.
     print $handle "[Desktop Entry]\n";
     print $handle "Encoding=UTF-8\n";
     print $handle "Name=${name}\n";
     print $handle "Type=Link\n";
     print $handle "URL=${url}\n";
-
+    
     close ($handle);
-
+    
     return 1;
 }
 
 sub write_url_shortcut_handle {
     my ( $handle, $name, $url ) = @_;
+ 
+    my $ascii_url = $url;
+    # Generate a URL where non-ASCII characters are placed with a question mark
+    $ascii_url =~ s/[x{0080}-\x{FFFF}]/?/g;
 
-    if(is_utf8($url)) {
+    print $handle "[InternetShortcut]\r\n";
+    print $handle "URL=${ascii_url}\r\n";
+ 
+    # If the url contains non-ascii characters, print the extra sections 
+    if($url ne $ascii_url) {
+        print $handle "[InternetShortcut.A]\r\n";
+        print $handle "URL=${ascii_url}\r\n";
+
         print $handle "[InternetShortcut.W]\r\n";
         my $url_utf7 = encode("UTF-7", $url);
-        print $handle "URL=${url_utf7}\r\n";
-    } else {
-        print $handle "[InternetShortcut]\r\n";
-        print $handle "URL=${url}\r\n";
+        print $handle "URL=${url_utf7}\r\n";      
     }
 
     close ($handle);
-
+    
     return 1;
 }
 
@@ -326,7 +322,7 @@ sub _try_load_module_for_webloc {
 
 sub write_webloc_binary_shortcut_handle {
     my ( $handle, $name, $url ) = @_;
-
+ 
     _try_load_module_for_webloc ( "Mac::PropertyList", "qw(:all)" );
     _try_load_module_for_webloc ( "Mac::PropertyList::WriteBinary", "" );
 
@@ -334,19 +330,19 @@ sub write_webloc_binary_shortcut_handle {
     my $buf = Mac::PropertyList::WriteBinary::as_string($data);
     print $handle $buf;
     close ($handle);
-
+    
     return 1;
 }
 
 sub write_webloc_xml_shortcut_handle {
     my ( $handle, $name, $url ) = @_;
-
+ 
     _try_load_module_for_webloc ( "Mac::PropertyList", "qw(:all)" );
-
+    
     my $str = create_from_hash({ "URL" => $url });
     print $handle $str;
     close ($handle);
-
+    
     return 1;
 }
 
@@ -368,3 +364,4 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as the Perl 5 programming language itself.
 
 =cut
+

@@ -36,16 +36,15 @@ DEPLOYMENT TO CPAN
     sudo make install
 - Regenerate MANIFEST (if no files were added or removed this can be skipped):
     make manifest
-  Scrub generated MANIFEST
+  Scrub generated MANIFEST (we exclude files with unicode?)
 - Tag the new version in github
-- Go to github and download archive for the tag. (github only gives option
-  to download zip?)
+- Go to github and download archive for the tag.
   Extract the archive.
   Rename the root folder from "WebShortcutUtil-Perl-version" to
   "WebShortcutUtil-version".
-  Compress the root folder to "WebShortcutUtil-version.targ.gz".
+  Compress the root folder to "WebShortcutUtil-version.tar.gz".
 - Login to the PAUSE website https://pause.perl.org/pause/.
-  Upload the "WebShortcutUtil-version.targ.gz".
+  Upload the "WebShortcutUtil-version.tar.gz" file.
 
 
 

@@ -112,6 +112,14 @@ like ($@, qr/Shortcut file does not have a recognized extension.*/, "Read bad ex
 my $gnome_path = File::Spec->catdir("t", "samples", "real", "desktop", "gnome");
 _test_read_shortcut($gnome_path, "Google.desktop", "Google", "https://www.google.com/");
 _test_read_shortcut($gnome_path, "Yahoo!.desktop", "Yahoo!", "http://www.yahoo.com/");
+_test_read_shortcut($gnome_path, "1.desktop", "1", "http://japan.zdnet.com/");
+_test_read_shortcut($gnome_path, "2.desktop", "2", "http://www.myspace.com/");
+_test_read_shortcut($gnome_path, "3.desktop", "3", "http://www.microsoft.com/sv-se/default.aspx");
+_test_read_shortcut($gnome_path, "4.desktop", "4", "http://www.google.se/#sclient=tablet-gws&hl=sv&tbo=d&q=sverige&oq=sveri&gs_l=tablet-gws.1.1.0l3.13058.15637.28.17682.5.2.2.1.1.0.143.243.0j2.2.0...0.0...1ac.1.xX8iu4i9hYM&pbx=1&fp=1&bpcl=40096503&biw=1280&bih=800&bav=on.2,or.r_gc.r_pw.r_qf.&cad=b");
+_test_read_shortcut($gnome_path, "5.desktop", "5", "http://www.中国政府.政务.cn/");
+_test_read_shortcut($gnome_path, "6.desktop", "6", "http://cn.yahoo.com/");
+_test_read_shortcut($gnome_path, "7.desktop", "7", "http://导航.中国/");
+_test_read_shortcut($gnome_path, "8.desktop", "8", "http://www.baidu.com/");
 _test_read_shortcut($gnome_path, File::Spec->catdir("renamed", "Link to Google - renamed.desktop"), "Link to Google - renamed", "https://www.google.com/");
 
 
@@ -125,6 +133,7 @@ _test_read_shortcut($kde_path, "http___www.yahoo.com_.desktop", "http___www.yaho
 _test_read_shortcut($kde_path, "http___cn.yahoo.com_.desktop", "http___cn.yahoo.com_", "http://cn.yahoo.com/");
 _test_read_shortcut($kde_path, "http___xn--fet810g.xn--fiqs8s_.desktop", "http___xn--fet810g.xn--fiqs8s_", "http://xn--fet810g.xn--fiqs8s/");
 _test_read_shortcut($kde_path, "http___www.baidu.com_.desktop", "http___www.baidu.com_", "http://www.baidu.com/");
+_test_read_shortcut($kde_path, "1.desktop", "1", "http://www.xn--fiqs8sirgfmh.xn--zfr164b.cn/");
 
 
 # Desktop fake tests
@@ -154,12 +163,26 @@ my $url_chrome_path = File::Spec->catdir("t", "samples", "real", "url", "Chrome"
 _test_read_shortcut($url_chrome_path, "Google.url", "Google", "https://www.google.com/");
 _test_read_shortcut($url_chrome_path, "Myspace - Social Entertainment.url", "Myspace - Social Entertainment", "http://www.myspace.com/");
 _test_read_shortcut($url_chrome_path, "Yahoo!.url", "Yahoo!", "http://www.yahoo.com/");
+_test_read_shortcut($url_chrome_path, "1.url", "1", "http://japan.zdnet.com/");
+_test_read_shortcut($url_chrome_path, "2.url", "2", "http://www.microsoft.com/sv-se/default.aspx");
+_test_read_shortcut($url_chrome_path, "3.url", "3", "http://www.google.se/#sclient=tablet-gws&hl=sv&tbo=d&q=sverige&oq=sveri&gs_l=tablet-gws.1.1.0l3.13058.15637.28.17682.5.2.2.1.1.0.143.243.0j2.2.0...0.0...1ac.1.xX8iu4i9hYM&pbx=1&fp=1&bpcl=40096503&biw=1280&bih=800&bav=on.2,or.r_gc.r_pw.r_qf.&cad=b");
+_test_read_shortcut($url_chrome_path, "4.url", "4", "http://www.xn--fiqs8sirgfmh.xn--zfr164b.cn/");
+_test_read_shortcut($url_chrome_path, "5.url", "5", "http://cn.yahoo.com/");
+_test_read_shortcut($url_chrome_path, "6.url", "6", "http://xn--fet810g.xn--fiqs8s/");
+_test_read_shortcut($url_chrome_path, "7.url", "7", "http://www.baidu.com/");
 
 # URL tests: Firefox (note that a couple of the URLs contain special ASCII characters (not UTF8) and need to use Perl's \xNN encoding mechanism)
 my $url_firefox_path = File::Spec->catdir("t", "samples", "real", "url", "Firefox");
 _test_read_shortcut($url_firefox_path, "Google.URL", "Google", "https://www.google.com/");
 _test_read_shortcut($url_firefox_path, "Myspace Social Entertainment.URL", "Myspace Social Entertainment", "http://www.myspace.com/");
 _test_read_shortcut($url_firefox_path, "Yahoo!.URL", "Yahoo!", "http://www.yahoo.com/");
+_test_read_shortcut($url_firefox_path, "1.URL", "1", "http://japan.zdnet.com/");
+_test_read_shortcut($url_firefox_path, "2.URL", "2", "http://www.microsoft.com/sv-se/default.aspx");
+_test_read_shortcut($url_firefox_path, "3.URL", "3", "http://www.google.se/#sclient=tablet-gws&hl=sv&tbo=d&q=sverige&oq=sveri&gs_l=tablet-gws.1.1.0l3.13058.15637.28.17682.5.2.2.1.1.0.143.243.0j2.2.0...0.0...1ac.1.xX8iu4i9hYM&pbx=1&fp=1&bpcl=40096503&biw=1280&bih=800&bav=on.2,or.r_gc.r_pw.r_qf.&cad=b");
+_test_read_shortcut($url_firefox_path, "4.URL", "4", "http://www.-\xFD?\x9C.?\xA1.cn/");
+_test_read_shortcut($url_firefox_path, "5.URL", "5", "http://cn.yahoo.com/");
+_test_read_shortcut($url_firefox_path, "6.URL", "6", "http://\xFC*.-\xFD/");
+_test_read_shortcut($url_firefox_path, "7.URL", "7", "http://www.baidu.com/");
 
 # URL tests: Internet Explorer
 my $url_ie_path = File::Spec->catdir("t", "samples", "real", "url", "IE");
@@ -167,6 +190,9 @@ _test_read_shortcut($url_ie_path, "cn.yahoo.com.url", "cn.yahoo.com", "http://cn
 _test_read_shortcut($url_ie_path, "Google.url", "Google", "https://www.google.com/");
 _test_read_shortcut($url_ie_path, "Myspace  Social Entertainment.url", "Myspace  Social Entertainment", "http://www.myspace.com/");
 _test_read_shortcut($url_ie_path, "Yahoo!.url", "Yahoo!", "http://www.yahoo.com/");
+_test_read_shortcut($url_ie_path, "1.url", "1", "http://www.microsoft.com/sv-se/default.aspx");
+_test_read_shortcut($url_ie_path, "2.url", "2", "http://www.中国政府.政务.cn/");
+_test_read_shortcut($url_ie_path, "3.url", "3", "http://www.baidu.com/");
 
 # URL tests: Hypothetical
 my $url_fake_path = File::Spec->catdir("t", "samples", "fake", "url");
@@ -185,6 +211,12 @@ _test_read_shortcut($website_ie9_path, "Google.website", "Google", "https://www.
 _test_read_shortcut($website_ie9_path, "Microsoft Corporation.website", "Microsoft Corporation", "http://www.microsoft.com/sv-se/default.aspx");
 _test_read_shortcut($website_ie9_path, "Myspace  Social Entertainment.website", "Myspace  Social Entertainment", "http://www.myspace.com/");
 _test_read_shortcut($website_ie9_path, "Yahoo!.website", "Yahoo!", "http://www.yahoo.com/");
+_test_read_shortcut($website_ie9_path, "1.website", "1", "http://japan.zdnet.com/");
+_test_read_shortcut($website_ie9_path, "2.website", "2", "http://www.google.se/");
+_test_read_shortcut($website_ie9_path, "3.website", "3", "http://www.中国政府.政务.cn/");
+_test_read_shortcut($website_ie9_path, "4.website", "4", "http://cn.yahoo.com/");
+_test_read_shortcut($website_ie9_path, "5.website", "5", "http://导航.中国/");
+_test_read_shortcut($website_ie9_path, "6.website", "6", "http://www.baidu.com/");
 
 # Website tests: IE10
 my $website_ie10_path = File::Spec->catdir("t", "samples", "real", "website", "IE10");
@@ -192,69 +224,17 @@ _test_read_shortcut($website_ie10_path, "Google.website", "Google", "https://www
 _test_read_shortcut($website_ie10_path, "Microsoft Corporation.website", "Microsoft Corporation", "http://www.microsoft.com/sv-se/default.aspx");
 _test_read_shortcut($website_ie10_path, "Myspace  Social Entertainment.website", "Myspace  Social Entertainment", "http://www.myspace.com/");
 _test_read_shortcut($website_ie10_path, "Yahoo!.website", "Yahoo!", "http://www.yahoo.com/");
+_test_read_shortcut($website_ie10_path, "1.website", "1", "http://japan.zdnet.com/");
+_test_read_shortcut($website_ie10_path, "2.website", "2", "http://www.google.se/");
+_test_read_shortcut($website_ie10_path, "3.website", "3", "http://www.中国政府.政务.cn/");
+_test_read_shortcut($website_ie10_path, "4.website", "4", "http://cn.yahoo.com/");
+_test_read_shortcut($website_ie10_path, "5.website", "5", "http://导航.中国/");
+_test_read_shortcut($website_ie10_path, "6.website", "6", "http://www.baidu.com/");
 
 
 # Test read_shortcut_file_url
 is(read_shortcut_file_url(File::Spec->catfile($gnome_path, "Google.desktop")), "https://www.google.com/", "read_shortcut_file_url");
 
-
-TODO: {
-    local $TODO = "Some file systems/operating systems do not handle unicode characters in filenames well.  Need to better manage these tests.";
-
-    eval {
-        # Gnome tests
-        _test_read_shortcut($gnome_path, "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan.desktop", "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan", "http://japan.zdnet.com/");
-        _test_read_shortcut($gnome_path, "Myspace | Social Entertainment.desktop", "Myspace | Social Entertainment", "http://www.myspace.com/");
-        _test_read_shortcut($gnome_path, "Microsoft Sverige | Enheter och tjänster.desktop", "Microsoft Sverige | Enheter och tjänster", "http://www.microsoft.com/sv-se/default.aspx");
-        _test_read_shortcut($gnome_path, "sverige - Sök på Google.desktop", "sverige - Sök på Google", "http://www.google.se/#sclient=tablet-gws&hl=sv&tbo=d&q=sverige&oq=sveri&gs_l=tablet-gws.1.1.0l3.13058.15637.28.17682.5.2.2.1.1.0.143.243.0j2.2.0...0.0...1ac.1.xX8iu4i9hYM&pbx=1&fp=1&bpcl=40096503&biw=1280&bih=800&bav=on.2,or.r_gc.r_pw.r_qf.&cad=b");
-        _test_read_shortcut($gnome_path, "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn.desktop", "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn", "http://www.中国政府.政务.cn/");
-        _test_read_shortcut($gnome_path, "中国雅虎首页.desktop", "中国雅虎首页", "http://cn.yahoo.com/");
-        _test_read_shortcut($gnome_path, "导航.中国.desktop", "导航.中国", "http://导航.中国/");
-        _test_read_shortcut($gnome_path, "百度一下，你就知道.desktop", "百度一下，你就知道", "http://www.baidu.com/");
-
-        # KDE tests
-        _test_read_shortcut($kde_path, "http___www.中国政府.政务.cn_.desktop", "http___www.中国政府.政务.cn_", "http://www.xn--fiqs8sirgfmh.xn--zfr164b.cn/");
-
-        # URL tests: Chrome
-        _test_read_shortcut($url_chrome_path, "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan.url", "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan", "http://japan.zdnet.com/");
-        _test_read_shortcut($url_chrome_path, "Microsoft Sverige - Enheter och tjänster.url", "Microsoft Sverige - Enheter och tjänster", "http://www.microsoft.com/sv-se/default.aspx");
-        _test_read_shortcut($url_chrome_path, "sverige - Sök på Google.url", "sverige - Sök på Google", "http://www.google.se/#sclient=tablet-gws&hl=sv&tbo=d&q=sverige&oq=sveri&gs_l=tablet-gws.1.1.0l3.13058.15637.28.17682.5.2.2.1.1.0.143.243.0j2.2.0...0.0...1ac.1.xX8iu4i9hYM&pbx=1&fp=1&bpcl=40096503&biw=1280&bih=800&bav=on.2,or.r_gc.r_pw.r_qf.&cad=b");
-        _test_read_shortcut($url_chrome_path, "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn.url", "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn", "http://www.xn--fiqs8sirgfmh.xn--zfr164b.cn/");
-        _test_read_shortcut($url_chrome_path, "中国雅虎首页.url", "中国雅虎首页", "http://cn.yahoo.com/");
-        _test_read_shortcut($url_chrome_path, "导航.中国.url", "导航.中国", "http://xn--fet810g.xn--fiqs8s/");
-        _test_read_shortcut($url_chrome_path, "百度一下，你就知道.url", "百度一下，你就知道", "http://www.baidu.com/");
-
-        # URL tests: Firefox (note that a couple of the URLs contain special ASCII characters (not UTF8) and need to use Perl's \xNN encoding mechanism)
-        _test_read_shortcut($url_firefox_path, "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan.URL", "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan", "http://japan.zdnet.com/");
-        _test_read_shortcut($url_firefox_path, "Microsoft Sverige Enheter och tjänster.URL", "Microsoft Sverige Enheter och tjänster", "http://www.microsoft.com/sv-se/default.aspx");
-        _test_read_shortcut($url_firefox_path, "sverige - Sök på Google.URL", "sverige - Sök på Google", "http://www.google.se/#sclient=tablet-gws&hl=sv&tbo=d&q=sverige&oq=sveri&gs_l=tablet-gws.1.1.0l3.13058.15637.28.17682.5.2.2.1.1.0.143.243.0j2.2.0...0.0...1ac.1.xX8iu4i9hYM&pbx=1&fp=1&bpcl=40096503&biw=1280&bih=800&bav=on.2,or.r_gc.r_pw.r_qf.&cad=b");
-        _test_read_shortcut($url_firefox_path, "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn.URL", "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn", "http://www.-\xFD?\x9C.?\xA1.cn/");
-        _test_read_shortcut($url_firefox_path, "中国雅虎首页.URL", "中国雅虎首页", "http://cn.yahoo.com/");
-        _test_read_shortcut($url_firefox_path, "导航.中国.URL", "导航.中国", "http://\xFC*.-\xFD/");
-        _test_read_shortcut($url_firefox_path, "百度一下，你就知道.URL", "百度一下，你就知道", "http://www.baidu.com/");
-
-        # URL tests: Internet Explorer
-        _test_read_shortcut($url_ie_path, "Microsoft Sverige  Enheter och tjänster.url", "Microsoft Sverige  Enheter och tjänster", "http://www.microsoft.com/sv-se/default.aspx");
-        _test_read_shortcut($url_ie_path, "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn.url", "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn", "http://www.中国政府.政务.cn/");
-        _test_read_shortcut($url_ie_path, "百度一下，你就知道.url", "百度一下，你就知道", "http://www.baidu.com/");
-
-        # Website tests: IE9
-        _test_read_shortcut($website_ie9_path, "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan.website", "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan", "http://japan.zdnet.com/");
-        _test_read_shortcut($website_ie9_path, "sverige - Sök på Google.website", "sverige - Sök på Google", "http://www.google.se/");
-        _test_read_shortcut($website_ie9_path, "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn.website", "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn", "http://www.中国政府.政务.cn/");
-        _test_read_shortcut($website_ie9_path, "中国雅虎首页.website", "中国雅虎首页", "http://cn.yahoo.com/");
-        _test_read_shortcut($website_ie9_path, "导航.中国.website", "导航.中国", "http://导航.中国/");
-        _test_read_shortcut($website_ie9_path, "百度一下，你就知道.website", "百度一下，你就知道", "http://www.baidu.com/");
-
-        # Website tests: IE10
-        _test_read_shortcut($website_ie10_path, "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan.website", "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan", "http://japan.zdnet.com/");
-        _test_read_shortcut($website_ie10_path, "sverige - Sök på Google.website", "sverige - Sök på Google", "http://www.google.se/");
-        _test_read_shortcut($website_ie10_path, "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn.website", "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn", "http://www.中国政府.政务.cn/");
-        _test_read_shortcut($website_ie10_path, "中国雅虎首页.website", "中国雅虎首页", "http://cn.yahoo.com/");
-        _test_read_shortcut($website_ie10_path, "导航.中国.website", "导航.中国", "http://导航.中国/");
-        _test_read_shortcut($website_ie10_path, "百度一下，你就知道.website", "百度一下，你就知道", "http://www.baidu.com/");
-    } or fail("Some tests died while accessing files named with unicode characters.");
-}
 
 
 SKIP: {
@@ -267,12 +247,31 @@ SKIP: {
     my $webloc_bin_percent_path = File::Spec->catdir($webloc_bin_path, "percent_encoded");
     _test_read_shortcut($webloc_bin_path, "Google.webloc", "Google", "https://www.google.com/");
     _test_read_shortcut($webloc_bin_path, "Yahoo!.webloc", "Yahoo!", "http://www.yahoo.com/");
+    _test_read_shortcut($webloc_bin_path, "1.webloc", "1", "http://japan.zdnet.com/");
+    _test_read_shortcut($webloc_bin_path, "2.webloc", "2", "http://www.microsoft.com/sv-se/default.aspx");
+    _test_read_shortcut($webloc_bin_path, "3.webloc", "3", "http://www.myspace.com/");
+    _test_read_shortcut($webloc_bin_path, "4.webloc", "4", "http://www.google.se/#sclient=tablet-gws&hl=sv&tbo=d&q=sverige&oq=sveri&gs_l=tablet-gws.1.1.0l3.13058.15637.28.17682.5.2.2.1.1.0.143.243.0j2.2.0...0.0...1ac.1.xX8iu4i9hYM&pbx=1&fp=1&bpcl=40096503&biw=1280&bih=800&bav=on.2,or.r_gc.r_pw.r_qf.&cad=b");
+    _test_read_shortcut($webloc_bin_path, "5.webloc", "5", "http://www.xn--fiqs8sirgfmh.xn--zfr164b.cn/");
+    _test_read_shortcut($webloc_bin_path, "6.webloc", "6", "http://cn.yahoo.com/");
+    _test_read_shortcut($webloc_bin_path, "7.webloc", "7", "http://xn--fet810g.xn--fiqs8s/");
+    _test_read_shortcut($webloc_bin_path, "8.webloc", "8", "http://www.baidu.com/");
+    _test_read_shortcut($webloc_bin_percent_path, "1.webloc", "1", "http://%E5%AF%BC%E8%88%AA.%E4%B8%AD%E5%9B%BD/");
 
     # XML plist tests
     my $webloc_xml_path = File::Spec->catdir("t", "samples", "real", "webloc", "xml");
     my $webloc_xml_percent_path = File::Spec->catdir($webloc_xml_path, "percent_encoded");
     _test_read_shortcut($webloc_xml_path, "Google.webloc", "Google", "https://www.google.com/");
     _test_read_shortcut($webloc_xml_path, "Yahoo!.webloc", "Yahoo!", "http://www.yahoo.com/");
+    _test_read_shortcut($webloc_xml_path, "1.webloc", "1", "http://japan.zdnet.com/");
+    _test_read_shortcut($webloc_xml_path, "2.webloc", "2", "http://www.microsoft.com/sv-se/default.aspx");
+    _test_read_shortcut($webloc_xml_path, "3.webloc", "3", "http://www.myspace.com/");
+    _test_read_shortcut($webloc_xml_path, "4.webloc", "4", "http://www.google.se/#sclient=tablet-gws&hl=sv&tbo=d&q=sverige&oq=sveri&gs_l=tablet-gws.1.1.0l3.13058.15637.28.17682.5.2.2.1.1.0.143.243.0j2.2.0...0.0...1ac.1.xX8iu4i9hYM&pbx=1&fp=1&bpcl=40096503&biw=1280&bih=800&bav=on.2,or.r_gc.r_pw.r_qf.&cad=b");
+    _test_read_shortcut($webloc_xml_path, "5.webloc", "5", "http://www.xn--fiqs8sirgfmh.xn--zfr164b.cn/");
+    _test_read_shortcut($webloc_xml_path, "6.webloc", "6", "http://cn.yahoo.com/");
+    _test_read_shortcut($webloc_xml_path, "7.webloc", "7", "http://xn--fet810g.xn--fiqs8s/");
+    _test_read_shortcut($webloc_xml_path, "8.webloc", "8", "http://www.baidu.com/");
+    _test_read_shortcut($webloc_xml_percent_path, "1.webloc", "1", "http://www.%E4%B8%AD%E5%9B%BD%E6%94%BF%E5%BA%9C.%E6%94%BF%E5%8A%A1.cn/");
+    _test_read_shortcut($webloc_xml_percent_path, "2.webloc", "2", "http://%E5%AF%BC%E8%88%AA.%E4%B8%AD%E5%9B%BD/");
 
     # Missing file
     eval { read_shortcut_file("bad_file.webloc") };
@@ -286,35 +285,6 @@ SKIP: {
 
     eval { read_shortcut_file(File::Spec->catdir ($webloc_xml_fake_path, "MissingUrl.webloc")) } ;
     like ($@, qr/Webloc plist file does not contain a URL.*/);
-
-    TODO: {
-        local $TODO = "Some file systems/operating systems do not handle unicode characters in filenames well.  Need to better manage these tests.";
-
-        eval {
-            # Binary plist tests
-            _test_read_shortcut($webloc_bin_path, "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan.webloc", "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan", "http://japan.zdnet.com/");
-            _test_read_shortcut($webloc_bin_path, "Microsoft Sverige  Enheter och tjänster.webloc", "Microsoft Sverige  Enheter och tjänster", "http://www.microsoft.com/sv-se/default.aspx");
-            _test_read_shortcut($webloc_bin_path, "Myspace  Social Entertainment.webloc", "Myspace  Social Entertainment", "http://www.myspace.com/");
-            _test_read_shortcut($webloc_bin_path, "sverige - Sök på Google.webloc", "sverige - Sök på Google", "http://www.google.se/#sclient=tablet-gws&hl=sv&tbo=d&q=sverige&oq=sveri&gs_l=tablet-gws.1.1.0l3.13058.15637.28.17682.5.2.2.1.1.0.143.243.0j2.2.0...0.0...1ac.1.xX8iu4i9hYM&pbx=1&fp=1&bpcl=40096503&biw=1280&bih=800&bav=on.2,or.r_gc.r_pw.r_qf.&cad=b");
-            _test_read_shortcut($webloc_bin_path, "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn.webloc", "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn", "http://www.xn--fiqs8sirgfmh.xn--zfr164b.cn/");
-            _test_read_shortcut($webloc_bin_path, "中国雅虎首页.webloc", "中国雅虎首页", "http://cn.yahoo.com/");
-            _test_read_shortcut($webloc_bin_path, "导航.中国.webloc", "导航.中国", "http://xn--fet810g.xn--fiqs8s/");
-            _test_read_shortcut($webloc_bin_path, "百度一下，你就知道.webloc", "百度一下，你就知道", "http://www.baidu.com/");
-            _test_read_shortcut($webloc_bin_percent_path, "导航.中国.webloc", "导航.中国", "http://%E5%AF%BC%E8%88%AA.%E4%B8%AD%E5%9B%BD/");
-
-            # XML plist tests
-            _test_read_shortcut($webloc_xml_path, "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan.webloc", "CIOとITマネージャーの課題を解決するオンラインメディア - ZDNet Japan", "http://japan.zdnet.com/");
-            _test_read_shortcut($webloc_xml_path, "Microsoft Sverige  Enheter och tjänster.webloc", "Microsoft Sverige  Enheter och tjänster", "http://www.microsoft.com/sv-se/default.aspx");
-            _test_read_shortcut($webloc_xml_path, "Myspace  Social Entertainment.webloc", "Myspace  Social Entertainment", "http://www.myspace.com/");
-            _test_read_shortcut($webloc_xml_path, "sverige - Sök på Google.webloc", "sverige - Sök på Google", "http://www.google.se/#sclient=tablet-gws&hl=sv&tbo=d&q=sverige&oq=sveri&gs_l=tablet-gws.1.1.0l3.13058.15637.28.17682.5.2.2.1.1.0.143.243.0j2.2.0...0.0...1ac.1.xX8iu4i9hYM&pbx=1&fp=1&bpcl=40096503&biw=1280&bih=800&bav=on.2,or.r_gc.r_pw.r_qf.&cad=b");
-            _test_read_shortcut($webloc_xml_path, "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn.webloc", "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn", "http://www.xn--fiqs8sirgfmh.xn--zfr164b.cn/");
-            _test_read_shortcut($webloc_xml_path, "中国雅虎首页.webloc", "中国雅虎首页", "http://cn.yahoo.com/");
-            _test_read_shortcut($webloc_xml_path, "导航.中国.webloc", "导航.中国", "http://xn--fet810g.xn--fiqs8s/");
-            _test_read_shortcut($webloc_xml_path, "百度一下，你就知道.webloc", "百度一下，你就知道", "http://www.baidu.com/");
-            _test_read_shortcut($webloc_xml_percent_path, "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn.webloc", "www.ÖÐ¹úÕþ¸®.ÕþÎñ.cn", "http://www.%E4%B8%AD%E5%9B%BD%E6%94%BF%E5%BA%9C.%E6%94%BF%E5%8A%A1.cn/");
-            _test_read_shortcut($webloc_xml_percent_path, "导航.中国.webloc", "导航.中国", "http://%E5%AF%BC%E8%88%AA.%E4%B8%AD%E5%9B%BD/");
-        } or fail("Some tests died while accessing files named with unicode characters.");
-    }
 }
 
 done_testing;

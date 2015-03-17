@@ -57,6 +57,9 @@ This module requires these other modules and libraries:
 
 The "t/samples" folder contains samples from the following repository:
   http://github.com/beckus/WebShortcutSamples
+  Notes: - Files with unicode in their names have been renamed to avoid issues with
+           unpacking in Windows.
+         - The files beginning with dots have also been removed (in the webloc folder)
 
 I chose not to use a Git submodule for this - Github does not
 include the submodule when creating the downloadable tar/zip file.

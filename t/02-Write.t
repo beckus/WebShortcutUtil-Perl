@@ -99,25 +99,13 @@ diag("Test shortcuts are being written to directory \"${test_output_dir}\".  You
 my $desktop_output_dir = File::Spec->catdir ( $test_output_dir, "desktop" );
 _make_path_with_error_check($desktop_output_dir);
 _test_write_shortcut(\&write_desktop_shortcut_file, \&create_desktop_shortcut_filename, $desktop_output_dir, "Google", "http://www.google.com", 1);
-_test_write_shortcut(\&write_desktop_shortcut_file, \&create_desktop_shortcut_filename, $desktop_output_dir, " !#\$&'()+,-.09;=\@AZ[]_`az{}~", "http://www.google.com", 1);
+_test_write_shortcut(\&write_desktop_shortcut_file, \&create_desktop_shortcut_filename, $desktop_output_dir, "unicode", "http://导航.中国/", 0);
 
 # .url tests
 my $url_output_dir = File::Spec->catdir ( $test_output_dir, "url" );
 _make_path_with_error_check($url_output_dir);
 _test_write_shortcut(\&write_url_shortcut_file, \&create_url_shortcut_filename, $url_output_dir, "Google", "http://www.google.com", 1);
-_test_write_shortcut(\&write_url_shortcut_file, \&create_url_shortcut_filename, $url_output_dir, " !#\$&'()+,-.09;=\@AZ[]_`az{}~", "http://www.google.com", 1);
-
-TODO: {
-    local $TODO = "Some file systems/operating systems do not handle unicode characters in filenames well.  Need to better manage these tests.";
-
-    eval {
-        # .desktop tests
-        _test_write_shortcut(\&write_desktop_shortcut_file, \&create_desktop_shortcut_filename, $desktop_output_dir, "导航.中国", "http://导航.中国/", 0);
-
-        # .url tests
-        _test_write_shortcut(\&write_url_shortcut_file, \&create_url_shortcut_filename, $url_output_dir, "导航.中国", "http://导航.中国/", 0);
-    } or fail("Some tests died while accessing files named with unicode characters.");
-}
+_test_write_shortcut(\&write_url_shortcut_file, \&create_url_shortcut_filename, $url_output_dir, "unicode", "http://导航.中国/", 0);
 
 SKIP: {
     if(!defined(check_install( module => 'Mac::PropertyList' ))) {
@@ -136,8 +124,8 @@ SKIP: {
         local $TODO = "Need to explore webloc unicode functionality to understand the proper use cases.";
 
         eval {
-            _test_write_shortcut(\&write_webloc_binary_shortcut_file, \&create_webloc_shortcut_filename, $webloc_binary_output_dir, "导航.中国", "http://导航.中国/", 0);
-            _test_write_shortcut(\&write_webloc_xml_shortcut_file, \&create_webloc_shortcut_filename, $webloc_xml_output_dir, "导航.中国", "http://导航.中国/", 0);
+            _test_write_shortcut(\&write_webloc_binary_shortcut_file, \&create_webloc_shortcut_filename, $webloc_binary_output_dir, "unicode", "http://导航.中国/", 0);
+            _test_write_shortcut(\&write_webloc_xml_shortcut_file, \&create_webloc_shortcut_filename, $webloc_xml_output_dir, "unicode", "http://导航.中国/", 0);
         } or fail("Some tests died while accessing files named with unicode characters.");
     }
 }

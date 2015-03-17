@@ -25,6 +25,7 @@ DEPLOYMENT TO CPAN
 - Need to run these commands to set up environment (in Ubuntu):
   sudo apt-get install libperl-critic-perl libdevel-cover-perl
 - Update version numbers in all pm files.
+  Regenerate the build files: perl Makefile.PL
 - Run unit tests: make test
 - Get test coverage (this is not currently working?):
     cover -test
@@ -42,11 +43,7 @@ DEPLOYMENT TO CPAN
     make manifest
   Scrub generated MANIFEST (we exclude files with unicode?)
 - Tag the new version in github
-- Go to github and download archive for the tag.
-  Extract the archive.
-  Rename the root folder from "WebShortcutUtil-Perl-version" to
-  "WebShortcutUtil-version".
-  Compress the root folder to "WebShortcutUtil-version.tar.gz".
+- Generate the distribution: make dist
 - Login to the PAUSE website https://pause.perl.org/pause/.
   Upload the "WebShortcutUtil-version.tar.gz" file.
 

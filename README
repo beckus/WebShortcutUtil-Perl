@@ -42,6 +42,7 @@ DEPLOYMENT TO CPAN
 - Regenerate MANIFEST (if no files were added or removed this can be skipped):
     make manifest
   Scrub generated MANIFEST
+- Update Changes file
 - Tag the new version in github
 - Generate the distribution: make dist
 - Login to the PAUSE website https://pause.perl.org/pause/.

@@ -43,10 +43,10 @@ DEPLOYMENT TO CPAN
     make manifest
   Scrub generated MANIFEST
 - Update Changes file
-- Tag the new version in github
 - Generate the distribution: make dist
 - Login to the PAUSE website https://pause.perl.org/pause/.
   Upload the "WebShortcutUtil-version.tar.gz" file.
+- Tag the new version in github
 
 
 
